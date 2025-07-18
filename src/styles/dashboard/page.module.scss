@@ -1,0 +1,18 @@
+.container {
+  max-width: 600px;
+  margin: 4rem auto;
+  text-align: center;
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  p {
+    margin-bottom: 2rem;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: center;
+  }
+}

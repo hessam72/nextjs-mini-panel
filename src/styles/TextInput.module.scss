@@ -1,0 +1,26 @@
+.container {
+  .label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #eee;
+  }
+  .input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #fff;    // default: white
+    border-radius: 4px;
+    transition: border-color 0.2s ease;
+
+    &.error {
+      border-color: red;
+    }
+    &.valid {
+      border-color: lime;
+    }
+  }
+  .errorMsg {
+    color: red;
+    margin-top: 0.25rem;
+  }
+}
