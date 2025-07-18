@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js Mobile Phone Auth Dashboard
 
-## Getting Started
+A polished Next.js (App Router) demo featuring phone‑number login/signup, OTP fallback for returning users, and a protected dashboard—built with TypeScript, SCSS modules, and React Context/localStorage.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Iranian Phone Validation**  
+  - Live client‑side validation on each keystroke  
+  - Supports Persian (۰–۹) and Latin (0–9) digits  
+  - Accepts both `09XXXXXXXXX` and `+98XXXXXXXXXX` formats  
+  - Contextual error messages (“فقط اعداد و علامت + مجاز است”, length and prefix hints)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Signup / New‑User Flow**  
+  - Fetches a random user from [RandomUser API](https://randomuser.me/api)  
+  - Persists multiple user records in `localStorage.users` array  
+  - Attaches your entered phone as `IRN_NUMBER` and `status: "logged_in"`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Login / Returning‑User Flow (OTP)**  
+  - On matching `IRN_NUMBER`, skips API call  
+  - Generates a 6‑digit OTP, shows it in a toast (via **react-hot-toast**)  
+  - Verifies OTP in a custom `OTPInput` component  
+  - Marks user’s `status` back to `"logged_in"`
 
-## Learn More
+- **Protected Dashboard**  
+  - Uses a `currentIRN` marker in localStorage to identify the active user  
+  - Middleware or client‑side guard ensures only `status === "logged_in"` can access  
+  - Clean, responsive UI: avatar, full name, email, phone, IRN_NUMBER cards  
+  - Logout clears session state and redirects to login
 
-To learn more about Next.js, take a look at the following resources:
+- **UI & Styling**  
+  - **SCSS Modules** with nesting and CSS‑module scoping  
+  - Reusable components: `TextInput`, `Button`, `Spinner`, `OTPInput`  
+  - **react-icons** for inline success/error indicators and form embellishments  
+  - Gradient backgrounds, spacious cards, smooth transitions, toast alerts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Tech Stack
 
-## Deploy on Vercel
+- **Next.js** (v13+ App Router)  
+- **TypeScript**  
+- **SCSS Modules**  
+- **React Hooks** (`useState`, `useEffect`)  
+- **localStorage** & **React Context** for multi‑user state  
+- **react-hot-toast** for non‑blocking OTP toasts  
+- **react-icons** for inline icons (FiCheckCircle, FiXCircle, FiUser, FiPhone, FiArrowRight)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📦 Installation & Startup
+
+1. **Clone & Install**  
+   ```bash
+   git clone https://github.com/your‑username/your‑repo.git
+   cd your‑repo
+   npm install
+   # or
+   yarn install
