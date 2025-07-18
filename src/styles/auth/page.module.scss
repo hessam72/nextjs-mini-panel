@@ -13,21 +13,27 @@
   max-width: 400px;
   width: 100%;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   padding: 2rem;
   text-align: center;
   position: relative;
   overflow: hidden;
-
+  z-index: 1;
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     top: -40%;
     right: -30%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 20%, transparent 60%);
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.15) 20%,
+      transparent 60%
+    );
     transform: rotate(45deg);
+    pointer-events: none;
+    z-index: -1;
   }
 }
 
@@ -54,4 +60,3 @@
   flex-direction: column;
   gap: 1.25rem;
 }
-

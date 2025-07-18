@@ -8,6 +8,7 @@ type User = {
   name?: { title?: string; first?: string; last?: string };
   email?: string;
   phone?: string;
+  status: 'logged_in' | 'logged_out';
   picture?: { large?: string };
   IRN_NUMBER?: string;
 };
@@ -17,28 +18,24 @@ export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
 
   // On mount, load user or redirect
+
   useEffect(() => {
     const raw = localStorage.getItem('user');
-    if (!raw) {
-      router.push('/auth');
-      return;
-    }
-    try {
-      setUser(JSON.parse(raw));
-    } catch {
-      router.push('/auth');
-    }
+    if (!raw) return router.push('/auth');
+    const u = JSON.parse(raw);
+    if (u.status !== 'logged_in') return router.push('/auth');
+    setUser(u);
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    if (!user) return;   
+    user.status = 'logged_out';
+    localStorage.setItem('user', JSON.stringify(user));
     router.push('/auth');
   };
 
-  if (!user) {
-    // Optionally render a spinner or nothing while checking
-    return null;
-  }
+  if (!user) return null;
+
 
   // Safely extract or fallback
   const fullName = [
@@ -74,7 +71,7 @@ export default function DashboardPage() {
           <p>{phone}</p>
         </div>
         <div className={styles.card}>
-          <h2>شماره IRN</h2>
+          <h2>IRN شماره </h2>
           <p>{irn}</p>
         </div>
       </section>
