@@ -3,15 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import styles from '@STYLES/dashboard/page.module.scss';
+import { User } from '@TYPES';
 
-type User = {
-  name?: { title?: string; first?: string; last?: string };
-  email?: string;
-  phone?: string;
-  status: 'logged_in' | 'logged_out';
-  picture?: { large?: string };
-  IRN_NUMBER?: string;
-};
+
 
 export default function DashboardPage() {
   const router = useRouter();

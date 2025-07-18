@@ -6,6 +6,7 @@ import TextInput from '@/components/TextInput';
 import Button from '@/components/Button';
 import Spinner from '@/components/Spinner';
 import OTPInput from '@/components/OTPInput';
+import { User } from '@TYPES';
 
 // Normalize Persian digits → Latin
 const normalizeDigits = (str: string) =>
@@ -27,6 +28,28 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [otpMode, setOtpMode] = useState(false);
   const [pendingUser, setPendingUser] = useState<StoredUser | null>(null);
+
+
+
+  // only guest users can visit this page
+  useEffect(() => {
+    const currentIRN = localStorage.getItem('currentIRN');
+    if (!currentIRN) return;                 // no one’s in session
+    const users: User[] = JSON.parse(
+      localStorage.getItem('users') || '[]'
+    );
+    const me = users.find(u => u.IRN_NUMBER === currentIRN);
+    if (me?.status === 'logged_in') {
+      router.replace('/dashboard');
+    }
+  }, [router]);
+
+
+
+
+
+
+
 
   // Live phone validation
   useEffect(() => {
