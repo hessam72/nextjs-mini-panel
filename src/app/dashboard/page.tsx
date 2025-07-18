@@ -13,6 +13,7 @@ import {
 } from 'react-icons/fi';
 import Button from '@/components/Button';
 import styles from '@STYLES/dashboard/page.module.scss';
+import toast from 'react-hot-toast';
 
 type User = {
   name?: { title?: string; first?: string; last?: string };
@@ -46,6 +47,10 @@ export default function DashboardPage() {
     const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
     const u = users.find(u => u.IRN_NUMBER === currentIRN);
     if (!u || u.status !== 'logged_in') {
+      toast.error(`به منظور دسترسی به داشبورد وارد شوید`, {
+        duration: 4000,
+        style: { fontSize: '1rem', padding: '1rem',direction:'rtl' }
+      });
       router.replace('/auth');
       return;
     }
@@ -68,7 +73,7 @@ export default function DashboardPage() {
 
   if (!user) return null;
 
-  const fullName = 
+  const fullName =
     [user.name?.title, user.name?.first, user.name?.last]
       .filter(Boolean)
       .join(' ') || 'نامشخص';
@@ -89,60 +94,60 @@ export default function DashboardPage() {
     <div className={styles.page}>
       <header className={styles.header}>
         <div className={styles.avatarWrapper}>
-          {user.picture?.large 
-            ? <img src={user.picture.large} alt="Avatar" className={styles.avatar}/>
-            : <FiUser className={styles.avatarIcon}/>
+          {user.picture?.large
+            ? <img src={user.picture.large} alt="Avatar" className={styles.avatar} />
+            : <FiUser className={styles.avatarIcon} />
           }
         </div>
         <h1 className={styles.name}>{fullName}</h1>
         <Button onClick={handleLogout} >
-          <FiLogOut className={styles.logoutIcon}/> خروج
+          <FiLogOut className={styles.logoutIcon} /> خروج
         </Button>
       </header>
 
       <section className={styles.infoGrid}>
         <div className={styles.card}>
-          <FiMail className={styles.icon}/>
+          <FiMail className={styles.icon} />
           <h2>ایمیل</h2>
           <p>{user.email || 'نامشخص'}</p>
         </div>
         <div className={styles.card}>
-          <FiPhone className={styles.icon}/>
+          <FiPhone className={styles.icon} />
           <h2>تلفن</h2>
           <p>{user.phone || 'نامشخص'}</p>
         </div>
         <div className={styles.card}>
-          <FiPhone className={styles.icon}/>
+          <FiPhone className={styles.icon} />
           <h2>همراه</h2>
           <p>{user.cell || 'نامشخص'}</p>
         </div>
         <div className={styles.card}>
-          <FiHash className={styles.icon}/>
+          <FiHash className={styles.icon} />
           <h2>شناسه</h2>
           <p>{user.id?.value || 'نامشخص'}</p>
         </div>
         <div className={styles.cardWide}>
-          <FiMapPin className={styles.icon}/>
+          <FiMapPin className={styles.icon} />
           <h2>آدرس</h2>
           <p>{address}</p>
         </div>
         <div className={styles.card}>
-          <FiCalendar className={styles.icon}/>
+          <FiCalendar className={styles.icon} />
           <h2>تاریخ تولد</h2>
           <p>{birthDate} ({user.dob?.age || '—'} سال)</p>
         </div>
         <div className={styles.card}>
-          <FiCalendar className={styles.icon}/>
+          <FiCalendar className={styles.icon} />
           <h2>عضویت از</h2>
           <p>{joinedDate} ({user.registered?.age || '—'} سال)</p>
         </div>
         <div className={styles.card}>
-          <FiGlobe className={styles.icon}/>
+          <FiGlobe className={styles.icon} />
           <h2>ملیت</h2>
           <p>{user.nat || 'نامشخص'}</p>
         </div>
         <div className={styles.card}>
-          <FiHash className={styles.icon}/>
+          <FiHash className={styles.icon} />
           <h2>IRN شماره</h2>
           <p>{user.IRN_NUMBER}</p>
         </div>
