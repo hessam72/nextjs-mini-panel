@@ -14,13 +14,14 @@
 
   .input {
     width: 100%;
-    padding: 0.5rem;
-    padding-right: 2.5rem;    // space for icon
+    padding: 0.7rem;
+    padding-left: 2.5rem;    // space for icon
     border: 2px solid #fff;   // default white
-    border-radius: 4px;
+    border-radius: 8px;
     transition: border-color 0.2s ease;
     background: #333;
     color: #fff;
+
   }
   .input.error {
     border-color: red;
@@ -33,7 +34,7 @@
   .iconError {
     position: absolute;
     top: 50%;
-    right: 0.75rem;
+    left: 0.75rem;
     transform: translateY(-50%);
     font-size: 1.25rem;
     pointer-events: none;

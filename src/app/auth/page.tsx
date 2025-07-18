@@ -6,7 +6,8 @@ import TextInput from '@/components/TextInput';
 import Button from '@/components/Button';
 import Spinner from '@/components/Spinner';
 import OTPInput from '@/components/OTPInput';
-import { User } from '@TYPES';
+import {  User } from '@TYPES';
+import { FiUser, FiPhone, FiLogIn } from 'react-icons/fi';
 
 // Normalize Persian digits → Latin
 const normalizeDigits = (str: string) =>
@@ -14,11 +15,7 @@ const normalizeDigits = (str: string) =>
     String.fromCharCode(d.charCodeAt(0) - 0x06F0 + 48)
   );
 
-type StoredUser = {
-  IRN_NUMBER: string;
-  status: 'logged_in' | 'logged_out';
-  [key: string]: any;
-};
+
 
 export default function AuthPage() {
   const router = useRouter();
@@ -27,7 +24,7 @@ export default function AuthPage() {
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(false);
   const [otpMode, setOtpMode] = useState(false);
-  const [pendingUser, setPendingUser] = useState<StoredUser | null>(null);
+  const [pendingUser, setPendingUser] = useState<User | null>(null);
 
 
 
@@ -43,12 +40,6 @@ export default function AuthPage() {
       router.replace('/dashboard');
     }
   }, [router]);
-
-
-
-
-
-
 
 
   // Live phone validation
@@ -84,7 +75,7 @@ export default function AuthPage() {
 
     const normalizedPhone = normalizeDigits(phone.trim());
     // Load stored users array
-    const users: StoredUser[] = JSON.parse(
+    const users: User[] = JSON.parse(
       localStorage.getItem('users') || '[]'
     );
     const existing = users.find(u => u.IRN_NUMBER === normalizedPhone);
@@ -107,7 +98,7 @@ export default function AuthPage() {
         'https://randomuser.me/api/?results=1&nat=us'
       );
       const { results } = await res.json();
-      const newUser: StoredUser = {
+      const newUser: User = {
         ...results[0],
         IRN_NUMBER: normalizedPhone,
         status: 'logged_in',
@@ -129,7 +120,7 @@ export default function AuthPage() {
     const currentIRN = localStorage.getItem('currentIRN');
     if (code === realOtp && pendingUser && currentIRN) {
       // Mark user logged_in in array
-      const users: StoredUser[] = JSON.parse(
+      const users: User[] = JSON.parse(
         localStorage.getItem('users') || '[]'
       );
       const updated = users.map(u =>
@@ -145,40 +136,55 @@ export default function AuthPage() {
     }
   };
 
-  return (
-    <div className={styles.page}>
-      {loading && <Spinner />}
-      <div className={styles.card}>
-        {otpMode ? (
-          <OTPInput onVerify={handleOtpVerify} error={error} />
-        ) : (
-          <>
+
+
+return (
+  <div className={styles.page}>
+    {loading && <Spinner />}
+
+    <div className={styles.card}>
+      {otpMode ? (
+        <OTPInput onVerify={handleOtpVerify} error={error} />
+      ) : (
+        <>
+          <div className={styles.header}>
+            <FiUser className={styles.heroIcon} />
             <h1 className={styles.title}>ورود به حساب کاربری</h1>
-            <p className={styles.subtitle}>
-              لطفاً شماره تلفن خود را وارد کنید
-            </p>
-            <form
-              onSubmit={handleSubmit}
-              noValidate
-              className={styles.form}
+          </div>
+
+          <p className={styles.subtitle}>
+            <FiPhone className={styles.subIcon} />
+            لطفاً شماره تلفن خود را وارد کنید
+          </p>
+
+          <form onSubmit={handleSubmit} noValidate className={styles.form}>
+            <TextInput
+              label="شماره تلفن"
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              error={error}
+              isValid={isValid}
+            />
+
+            <Button
+              onClick={handleSubmit}
+              disabled={!isValid || loading}
             >
-              <TextInput
-                label="شماره تلفن ایران"
-                value={phone}
-                onChange={e => setPhone(e.target.value)}
-                error={error}
-                isValid={isValid}
-              />
-              <Button
-                onClick={handleSubmit}
-                disabled={!isValid || loading}
-              >
-                {loading ? 'در حال پردازش…' : 'دریافت کد'}
-              </Button>
-            </form>
-          </>
-        )}
-      </div>
+              {loading
+                ? 'در حال پردازش…'
+                : (
+                  <>
+                    ورود
+                    <FiLogIn className={styles.btnIcon} />
+                  </>
+                )}
+            </Button>
+          </form>
+        </>
+      )}
     </div>
-  );
+  </div>
+)
+
+
 }

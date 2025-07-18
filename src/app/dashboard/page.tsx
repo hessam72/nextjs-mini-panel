@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import styles from '@STYLES/dashboard/page.module.scss';
 import { User } from '@TYPES';
+import { FiLogOut } from 'react-icons/fi';
 
 
 
@@ -68,7 +69,12 @@ export default function DashboardPage() {
           <img src={avatar} alt="User Avatar" className={styles.avatar} />
         </div>
         <h1 className={styles.name}>{fullName}</h1>
-        <Button onClick={handleLogout}>خروج</Button>
+        <Button onClick={handleLogout}>
+           <>
+                    خروج
+                    <FiLogOut className={styles.btnIcon} />
+                  </>
+        </Button>
       </header>
 
       <section className={styles.infoGrid}>
