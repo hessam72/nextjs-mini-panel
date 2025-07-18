@@ -171,7 +171,7 @@ export default function AuthPage() {
               />
 
               <Button
-                onClick={handleSubmit}
+                onClick={()=>handleSubmit}
                 disabled={!isValid || loading}
               >
                 {loading
