@@ -18,21 +18,37 @@ export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
 
   // On mount, load user or redirect
-
   useEffect(() => {
-    const raw = localStorage.getItem('user');
-    if (!raw) return router.push('/auth');
-    const u = JSON.parse(raw);
-    if (u.status !== 'logged_in') return router.push('/auth');
+    const currentIRN = localStorage.getItem('currentIRN');
+    const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
+    const u = users.find(u => u.IRN_NUMBER === currentIRN)
+    if (!u || u.status !== 'logged_in') {
+      return router.push('/auth');
+    }
     setUser(u);
   }, [router]);
 
+
+
+
   const handleLogout = () => {
-    if (!user) return;   
-    user.status = 'logged_out';
-    localStorage.setItem('user', JSON.stringify(user));
+    const currentIRN = localStorage.getItem('currentIRN');
+    if (!currentIRN) return;
+
+    // Load, update, save
+    const users: User[] = JSON.parse(localStorage.getItem('users')!);
+    const updated = users.map(u =>
+      u.IRN_NUMBER === currentIRN
+        ? { ...u, status: 'logged_out' }
+        : u
+    );
+    localStorage.setItem('users', JSON.stringify(updated));
+
+    // Clear active user marker
+    localStorage.removeItem('currentIRN');
     router.push('/auth');
   };
+
 
   if (!user) return null;
 

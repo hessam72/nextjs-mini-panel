@@ -13,6 +13,12 @@ const normalizeDigits = (str: string) =>
     String.fromCharCode(d.charCodeAt(0) - 0x06F0 + 48)
   );
 
+type StoredUser = {
+  IRN_NUMBER: string;
+  status: 'logged_in' | 'logged_out';
+  [key: string]: any;
+};
+
 export default function AuthPage() {
   const router = useRouter();
   const [phone, setPhone] = useState('');
@@ -20,12 +26,14 @@ export default function AuthPage() {
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(false);
   const [otpMode, setOtpMode] = useState(false);
-  const [storedUser, setStoredUser] = useState<any>(null);
+  const [pendingUser, setPendingUser] = useState<StoredUser | null>(null);
 
-  // Live validation (same as before)...
+  // Live phone validation
   useEffect(() => {
     const input = phone.trim();
-    if (!input) { setError(''); setIsValid(false); return; }
+    if (!input) {
+      setError(''); setIsValid(false); return;
+    }
     if (!/^[+\u06F0-\u06F90-9]+$/.test(input)) {
       setError('فقط اعداد و علامت + مجاز است'); setIsValid(false); return;
     }
@@ -33,52 +41,58 @@ export default function AuthPage() {
     if (!/^(\+98|09)/.test(normalized)) {
       setError('فرمت باید با +98 یا 09 شروع شود'); setIsValid(false); return;
     }
-    const digitsOnly = normalized.startsWith('+') ? normalized.slice(1) : normalized;
+    const digits = normalized.startsWith('+') ? normalized.slice(1) : normalized;
     if (normalized.startsWith('+98')) {
-      if (!/^\d{12}$/.test(digitsOnly)) {
+      if (!/^\d{12}$/.test(digits)) {
         setError('برای +98، باید 12 رقم وارد شود'); setIsValid(false); return;
       }
     } else {
-      if (!/^\d{11}$/.test(digitsOnly)) {
+      if (!/^\d{11}$/.test(digits)) {
         setError('برای 09، باید 11 رقم وارد شود'); setIsValid(false); return;
       }
     }
-    if (/^(09\d{9}|\+98\d{10})$/.test(normalized)) {
-      setError(''); setIsValid(true);
-    } else {
-      setError('شماره نامعتبر است'); setIsValid(false);
-    }
+    setError(''); setIsValid(true);
   }, [phone]);
 
-  // On submit, decide new user vs OTP flow
+  // Main submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid || loading) return;
+
     const normalizedPhone = normalizeDigits(phone.trim());
-    const existing = localStorage.getItem('user');
+    // Load stored users array
+    const users: StoredUser[] = JSON.parse(
+      localStorage.getItem('users') || '[]'
+    );
+    const existing = users.find(u => u.IRN_NUMBER === normalizedPhone);
+
     if (existing) {
-      const u = JSON.parse(existing);
-      if (u.IRN_NUMBER === normalizedPhone) {
-        // OTP flow
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        localStorage.setItem('otp', otp);
-        alert(`کد ورود شما: ${otp}`);
-        setStoredUser(u);
-        setOtpMode(true);
-        return;
-      }
+      // OTP flow for existing user
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      localStorage.setItem('otp', otp);
+      localStorage.setItem('currentIRN', normalizedPhone);
+      alert(`کد ورود شما: ${otp}`);
+      setPendingUser(existing);
+      setOtpMode(true);
+      return;
     }
+
     // New user flow
     setLoading(true);
     try {
-      const res = await fetch('https://randomuser.me/api/?results=1&nat=us');
+      const res = await fetch(
+        'https://randomuser.me/api/?results=1&nat=us'
+      );
       const { results } = await res.json();
-      const user = {
+      const newUser: StoredUser = {
         ...results[0],
         IRN_NUMBER: normalizedPhone,
         status: 'logged_in',
       };
-      localStorage.setItem('user', JSON.stringify(user));
+      // Append and persist
+      const updatedUsers = [...users, newUser];
+      localStorage.setItem('users', JSON.stringify(updatedUsers));
+      localStorage.setItem('currentIRN', normalizedPhone);
       router.push('/dashboard');
     } catch {
       setError('خطا در ورود، دوباره تلاش کنید');
@@ -86,14 +100,22 @@ export default function AuthPage() {
     }
   };
 
-  // OTP verification callback
+  // OTP verification handler
   const handleOtpVerify = (code: string) => {
     const realOtp = localStorage.getItem('otp');
-    if (code === realOtp && storedUser) {
-      // login succeeded
+    const currentIRN = localStorage.getItem('currentIRN');
+    if (code === realOtp && pendingUser && currentIRN) {
+      // Mark user logged_in in array
+      const users: StoredUser[] = JSON.parse(
+        localStorage.getItem('users') || '[]'
+      );
+      const updated = users.map(u =>
+        u.IRN_NUMBER === currentIRN
+          ? { ...u, status: 'logged_in' }
+          : u
+      );
+      localStorage.setItem('users', JSON.stringify(updated));
       localStorage.removeItem('otp');
-      storedUser.status = 'logged_in';
-      localStorage.setItem('user', JSON.stringify(storedUser));
       router.push('/dashboard');
     } else {
       setError('کد اشتباه است');
@@ -109,8 +131,14 @@ export default function AuthPage() {
         ) : (
           <>
             <h1 className={styles.title}>ورود به حساب کاربری</h1>
-            <p className={styles.subtitle}>لطفاً شماره تلفن خود را وارد کنید</p>
-            <form onSubmit={handleSubmit} noValidate className={styles.form}>
+            <p className={styles.subtitle}>
+              لطفاً شماره تلفن خود را وارد کنید
+            </p>
+            <form
+              onSubmit={handleSubmit}
+              noValidate
+              className={styles.form}
+            >
               <TextInput
                 label="شماره تلفن ایران"
                 value={phone}
@@ -118,7 +146,10 @@ export default function AuthPage() {
                 error={error}
                 isValid={isValid}
               />
-              <Button onClick={handleSubmit} disabled={!isValid || loading}>
+              <Button
+                onClick={handleSubmit}
+                disabled={!isValid || loading}
+              >
                 {loading ? 'در حال پردازش…' : 'دریافت کد'}
               </Button>
             </form>
