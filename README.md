@@ -52,9 +52,8 @@ A polished Next.js (App Router) demo featuring phone‑number login/signup, OTP 
 ## 📦 Installation & Startup
 
 1. **Clone & Install**  
-   ```bash
-   git clone https://github.com/your‑username/your‑repo.git
-   cd your‑repo
-   npm install
-   # or
-   yarn install
+   
+   - git clone git@github.com:hessam72/nextjs-mini-panel.git
+   - cd nextjs-mini-panel
+   - npm install
+   - npm run dev
