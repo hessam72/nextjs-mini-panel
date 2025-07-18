@@ -6,8 +6,9 @@ import TextInput from '@/components/TextInput';
 import Button from '@/components/Button';
 import Spinner from '@/components/Spinner';
 import OTPInput from '@/components/OTPInput';
-import {  User } from '@TYPES';
+import { User } from '@TYPES';
 import { FiUser, FiPhone, FiLogIn } from 'react-icons/fi';
+import toast from 'react-hot-toast';
 
 // Normalize Persian digits → Latin
 const normalizeDigits = (str: string) =>
@@ -52,7 +53,7 @@ export default function AuthPage() {
       setError('فقط اعداد و علامت + مجاز است'); setIsValid(false); return;
     }
     const normalized = normalizeDigits(input);
-    if (!/^(\+98|09)/.test(normalized)) {
+    if (!/^(\+989|09)/.test(normalized)) {
       setError('فرمت باید با +98 یا 09 شروع شود'); setIsValid(false); return;
     }
     const digits = normalized.startsWith('+') ? normalized.slice(1) : normalized;
@@ -85,7 +86,10 @@ export default function AuthPage() {
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       localStorage.setItem('otp', otp);
       localStorage.setItem('currentIRN', normalizedPhone);
-      alert(`کد ورود شما: ${otp}`);
+      toast.success(`کد ورود شما: ${otp}`, {
+        duration: 4000,
+        style: { fontSize: '1rem', padding: '1rem' }
+      });
       setPendingUser(existing);
       setOtpMode(true);
       return;
@@ -138,53 +142,53 @@ export default function AuthPage() {
 
 
 
-return (
-  <div className={styles.page}>
-    {loading && <Spinner />}
+  return (
+    <div className={styles.page}>
+      {loading && <Spinner />}
 
-    <div className={styles.card}>
-      {otpMode ? (
-        <OTPInput onVerify={handleOtpVerify} error={error} />
-      ) : (
-        <>
-          <div className={styles.header}>
-            <FiUser className={styles.heroIcon} />
-            <h1 className={styles.title}>ورود به حساب کاربری</h1>
-          </div>
+      <div className={styles.card}>
+        {otpMode ? (
+          <OTPInput onVerify={handleOtpVerify} error={error} />
+        ) : (
+          <>
+            <div className={styles.header}>
+              <FiUser className={styles.heroIcon} />
+              <h1 className={styles.title}>ورود به حساب کاربری</h1>
+            </div>
 
-          <p className={styles.subtitle}>
-            <FiPhone className={styles.subIcon} />
-            لطفاً شماره تلفن خود را وارد کنید
-          </p>
+            <p className={styles.subtitle}>
+              <FiPhone className={styles.subIcon} />
+              لطفاً شماره تلفن خود را وارد کنید
+            </p>
 
-          <form onSubmit={handleSubmit} noValidate className={styles.form}>
-            <TextInput
-              label="شماره تلفن"
-              value={phone}
-              onChange={e => setPhone(e.target.value)}
-              error={error}
-              isValid={isValid}
-            />
+            <form onSubmit={handleSubmit} noValidate className={styles.form}>
+              <TextInput
+                label="شماره تلفن"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                error={error}
+                isValid={isValid}
+              />
 
-            <Button
-              onClick={handleSubmit}
-              disabled={!isValid || loading}
-            >
-              {loading
-                ? 'در حال پردازش…'
-                : (
-                  <>
-                    ورود
-                    <FiLogIn className={styles.btnIcon} />
-                  </>
-                )}
-            </Button>
-          </form>
-        </>
-      )}
+              <Button
+                onClick={handleSubmit}
+                disabled={!isValid || loading}
+              >
+                {loading
+                  ? 'در حال پردازش…'
+                  : (
+                    <>
+                      ورود
+                      <FiLogIn className={styles.btnIcon} />
+                    </>
+                  )}
+              </Button>
+            </form>
+          </>
+        )}
+      </div>
     </div>
-  </div>
-)
+  )
 
 
 }
