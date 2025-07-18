@@ -3,22 +3,48 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: #262626;
+    color: #484848;
   }
+
+  .inputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
   .input {
     width: 100%;
     padding: 0.5rem;
-    border: 2px solid #fff;    
+    padding-right: 2.5rem;    // space for icon
+    border: 2px solid #fff;   // default white
     border-radius: 4px;
     transition: border-color 0.2s ease;
-
-    &.error {
-      border-color: red;
-    }
-    &.valid {
-      border-color: lime;
-    }
+    background: #333;
+    color: #fff;
   }
+  .input.error {
+    border-color: red;
+  }
+  .input.valid {
+    border-color: lime;
+  }
+
+  .iconSuccess,
+  .iconError {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    font-size: 1.25rem;
+    pointer-events: none;
+  }
+  .iconSuccess {
+    color: lime;
+  }
+  .iconError {
+    color: red;
+  }
+
   .errorMsg {
     color: red;
     margin-top: 0.25rem;

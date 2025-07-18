@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import styles from '@STYLES/TextInput.module.scss';
+import { FiCheckCircle, FiXCircle } from 'react-icons/fi';
 
 type TextInputProps = {
   label: string;
@@ -17,8 +18,8 @@ export default function TextInput({
   error,
   isValid = false,
 }: TextInputProps) {
-  // Build class: default + error or valid
-  const classNames = [
+  // Determine classes
+  const inputClasses = [
     styles.input,
     error ? styles.error : isValid ? styles.valid : '',
   ]
@@ -28,12 +29,21 @@ export default function TextInput({
   return (
     <div className={styles.container}>
       <label className={styles.label}>{label}</label>
-      <input
-        className={classNames}
-        type="text"
-        value={value}
-        onChange={onChange}
-      />
+      <div className={styles.inputWrapper}>
+        <input
+          className={inputClasses}
+          type="text"
+          value={value}
+          onChange={onChange}
+        />
+        {/* Icons */}
+        {isValid && !error && (
+          <FiCheckCircle className={styles.iconSuccess} />
+        )}
+        {error && (
+          <FiXCircle className={styles.iconError} />
+        )}
+      </div>
       {error && <div className={styles.errorMsg}>{error}</div>}
     </div>
   );
