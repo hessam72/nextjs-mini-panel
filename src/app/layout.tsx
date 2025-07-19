@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "پنل مدیریت",
-  description: "تولید شده توسط نکست",
+  description: "توسعه دهنده - تهامی",
 };
 
 export default function RootLayout({
