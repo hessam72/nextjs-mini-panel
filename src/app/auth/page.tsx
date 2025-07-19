@@ -54,7 +54,7 @@ export default function AuthPage() {
     }
     const normalized = normalizeDigits(input);
     if (!/^(\+989|09)/.test(normalized)) {
-      setError('فرمت باید با +98 یا 09 شروع شود'); setIsValid(false); return;
+      setError('فرمت باید با +989 یا 09 شروع شود'); setIsValid(false); return;
     }
     const digits = normalized.startsWith('+') ? normalized.slice(1) : normalized;
     if (normalized.startsWith('+98')) {
@@ -83,7 +83,7 @@ export default function AuthPage() {
 
     if (existing) {
       // OTP flow for existing user
-const otp = Math.floor(1000 + Math.random() * 9000).toString();
+      const otp = Math.floor(1000 + Math.random() * 9000).toString();
       localStorage.setItem('otp', otp);
       localStorage.setItem('currentIRN', normalizedPhone);
       toast.success(`کد ورود شما: ${otp}`, {
@@ -171,7 +171,7 @@ const otp = Math.floor(1000 + Math.random() * 9000).toString();
               />
 
               <Button
-                onClick={()=>handleSubmit}
+                onClick={() => handleSubmit}
                 disabled={!isValid || loading}
               >
                 {loading

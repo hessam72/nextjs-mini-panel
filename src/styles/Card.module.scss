@@ -1,0 +1,41 @@
+.card, .cardWide {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+}
+
+.card {
+  grid-column: span 1;
+}
+
+.cardWide {
+  grid-column: span 2;
+  background: #faf5ff;
+}
+
+.iconWrapper {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  color: #667eea; /* default icon color */
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: #444;
+}
+
+.content {
+  font-size: 0.95rem;
+  color: #222;
+}

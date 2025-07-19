@@ -14,29 +14,10 @@ import {
 import Button from '@/components/Button';
 import styles from '@STYLES/dashboard/page.module.scss';
 import toast from 'react-hot-toast';
+import { User } from '@TYPES';
+import Card from '@/components/Card';
 
-type User = {
-  name?: { title?: string; first?: string; last?: string };
-  gender?: string;
-  dob?: { date: string; age: number };
-  registered?: { date: string; age: number };
-  location?: {
-    street?: { number?: number; name?: string };
-    city?: string;
-    state?: string;
-    country?: string;
-    postcode?: string | number;
-    timezone?: { offset?: string; description?: string };
-  };
-  email?: string;
-  phone?: string;
-  cell?: string;
-  id?: { name?: string; value?: string };
-  picture?: { large?: string };
-  nat?: string;
-  IRN_NUMBER?: string;
-  status: 'logged_in' | 'logged_out';
-};
+
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -49,7 +30,7 @@ export default function DashboardPage() {
     if (!u || u.status !== 'logged_in') {
       toast.error(`به منظور دسترسی به داشبورد وارد شوید`, {
         duration: 4000,
-        style: { fontSize: '1rem', padding: '1rem',direction:'rtl' }
+        style: { fontSize: '1rem', padding: '1rem', direction: 'rtl' }
       });
       router.replace('/auth');
       return;
@@ -90,6 +71,30 @@ export default function DashboardPage() {
     ? `${user.location.street?.number || ''} ${user.location.street?.name || ''}, ${user.location.city}, ${user.location.state}`
     : 'نامشخص';
 
+
+
+  const cards = [
+    { icon: <FiMail />, title: 'ایمیل', content: user.email },
+    { icon: <FiPhone />, title: 'تلفن', content: user.phone },
+    { icon: <FiPhone />, title: 'همراه', content: user.cell },
+    { icon: <FiHash />, title: 'شناسه', content: user.id?.value },
+    { icon: <FiMapPin />, title: 'آدرس', content: address, wide: true },
+    {
+      icon: <FiCalendar />,
+      title: 'تاریخ تولد',
+      content: `${birthDate} (${user.dob?.age ?? '—'} سال)`,
+    },
+    {
+      icon: <FiCalendar />,
+      title: 'عضویت از',
+      content: `${joinedDate} (${user.registered?.age ?? '—'} سال)`,
+    },
+    { icon: <FiGlobe />, title: 'ملیت', content: user.nat },
+    { icon: <FiHash />, title: 'IRN شماره', content: user.IRN_NUMBER },
+  ];
+
+
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
@@ -106,51 +111,11 @@ export default function DashboardPage() {
       </header>
 
       <section className={styles.infoGrid}>
-        <div className={styles.card}>
-          <FiMail className={styles.icon} />
-          <h2>ایمیل</h2>
-          <p>{user.email || 'نامشخص'}</p>
-        </div>
-        <div className={styles.card}>
-          <FiPhone className={styles.icon} />
-          <h2>تلفن</h2>
-          <p>{user.phone || 'نامشخص'}</p>
-        </div>
-        <div className={styles.card}>
-          <FiPhone className={styles.icon} />
-          <h2>همراه</h2>
-          <p>{user.cell || 'نامشخص'}</p>
-        </div>
-        <div className={styles.card}>
-          <FiHash className={styles.icon} />
-          <h2>شناسه</h2>
-          <p>{user.id?.value || 'نامشخص'}</p>
-        </div>
-        <div className={styles.cardWide}>
-          <FiMapPin className={styles.icon} />
-          <h2>آدرس</h2>
-          <p>{address}</p>
-        </div>
-        <div className={styles.card}>
-          <FiCalendar className={styles.icon} />
-          <h2>تاریخ تولد</h2>
-          <p>{birthDate} ({user.dob?.age || '—'} سال)</p>
-        </div>
-        <div className={styles.card}>
-          <FiCalendar className={styles.icon} />
-          <h2>عضویت از</h2>
-          <p>{joinedDate} ({user.registered?.age || '—'} سال)</p>
-        </div>
-        <div className={styles.card}>
-          <FiGlobe className={styles.icon} />
-          <h2>ملیت</h2>
-          <p>{user.nat || 'نامشخص'}</p>
-        </div>
-        <div className={styles.card}>
-          <FiHash className={styles.icon} />
-          <h2>IRN شماره</h2>
-          <p>{user.IRN_NUMBER}</p>
-        </div>
+        {cards.map(({ icon, title, content, wide }) => (
+          <Card key={title} icon={icon} title={title} wide={wide}>
+            {content ?? 'نامشخص'}
+          </Card>
+        ))}
       </section>
     </div>
   );

@@ -12,7 +12,6 @@ export default function OTPInput({ onVerify, error }: OTPInputProps) {
   const [digits, setDigits] = useState<string[]>(['', '', '', '']);
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
 
-  // When all four digits filled, auto‑submit or enable verify
   const fullCode = digits.join('');
 
   // Focus next on input

@@ -57,43 +57,7 @@
   gap: 1.5rem;
 }
 
-.card,
-.cardWide {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-  text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: default;
 
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  }
-
-  h2 {
-    margin-top: 0.65rem;
-    font-size: 1.15rem;
-    font-weight: 500;
-    color: #444;
-  }
-  p {
-    margin: 0.5rem 0 0;
-    font-size: 1rem;
-    color: #555;
-  }
-
-  .icon {
-    font-size: 1.75rem;
-    margin-bottom: 0.25rem;
-  }
-}
-
-.card:nth-child(odd) .icon { color: #667eea; }
-.card:nth-child(even) .icon { color: #f6ad55; }
-.cardWide { background: #faf5ff; }
-.cardWide .icon { color: #d53f8c; }
 
 @media (max-width: 768px) {
   .header { padding: 2rem 1rem; }

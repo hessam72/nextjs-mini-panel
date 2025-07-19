@@ -5,7 +5,7 @@
 
   --button-primary-hover: #383838;
   --button-secondary-hover: #f2f2f2;
-
+  direction: rtl;
   display: grid;
   grid-template-rows: 20px 1fr 20px;
   align-items: center;
@@ -67,10 +67,7 @@
   height: 48px;
   padding: 0 20px;
   border: 1px solid transparent;
-  transition:
-    background 0.2s,
-    color 0.2s,
-    border-color 0.2s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
   cursor: pointer;
   display: flex;
   align-items: center;
