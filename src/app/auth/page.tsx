@@ -9,13 +9,7 @@ import OTPInput from '@/components/OTPInput';
 import { User } from '@TYPES';
 import { FiUser, FiPhone, FiLogIn } from 'react-icons/fi';
 import toast from 'react-hot-toast';
-
-// Normalize Persian digits → Latin
-const normalizeDigits = (str: string) =>
-  str.replace(/[\u06F0-\u06F9]/g, d =>
-    String.fromCharCode(d.charCodeAt(0) - 0x06F0 + 48)
-  );
-
+import { normalizeDigits, generateOTP } from '@/utils/auth';
 
 
 export default function AuthPage() {
@@ -83,7 +77,7 @@ export default function AuthPage() {
 
     if (existing) {
       // OTP flow for existing user
-      const otp = Math.floor(1000 + Math.random() * 9000).toString();
+       const otp = generateOTP(4);
       localStorage.setItem('otp', otp);
       localStorage.setItem('currentIRN', normalizedPhone);
       toast.success(`کد ورود شما: ${otp}`, {

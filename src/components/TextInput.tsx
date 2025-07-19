@@ -18,7 +18,6 @@ export default function TextInput({
   error,
   isValid = false,
 }: TextInputProps) {
-  // Determine classes
   const inputClasses = [
     styles.input,
     error ? styles.error : isValid ? styles.valid : '',
@@ -36,7 +35,6 @@ export default function TextInput({
           value={value}
           onChange={onChange}
         />
-        {/* Icons */}
         {isValid && !error && (
           <FiCheckCircle className={styles.iconSuccess} />
         )}
